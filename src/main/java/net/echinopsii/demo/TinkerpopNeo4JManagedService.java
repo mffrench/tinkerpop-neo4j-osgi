@@ -4,66 +4,57 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.TransactionalGraph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j2.Neo4j2Graph;
-import org.neo4j.kernel.logging.BufferingConsoleLogger;
-import org.neo4j.kernel.logging.DefaultLogging;
-import org.neo4j.kernel.logging.Logging;
-import org.neo4j.server.Bootstrapper;
-import org.neo4j.server.CommunityNeoServer;
-import org.neo4j.server.NeoServer;
-import org.neo4j.server.configuration.Configurator;
-import org.neo4j.server.configuration.PropertyFileConfigurator;
-import org.neo4j.server.configuration.validation.DatabaseLocationMustBeSpecifiedRule;
-import org.neo4j.server.configuration.validation.Validator;
+import org.neo4j.helpers.Pair;
+import org.neo4j.server.CommunityBootstrapper;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.rmi.RMISecurityManager;
+import java.util.ArrayList;
 import java.util.Dictionary;
 
 public class TinkerpopNeo4JManagedService implements ManagedService {
 
     private final static Logger log = LoggerFactory.getLogger(TinkerpopNeo4JManagedService.class);
+    private static final String NEO4J_HOME = "neo4j.home";
     private static final String NEO4J_CONFIG_FILE_PATH_PROPS = "neo4j.configfile";
 
-    private Bootstrapper bootstrapper = Bootstrapper.loadMostDerivedBootstrapper();
-    private Configurator configurator ;
-    private NeoServer    server ;
-    private Thread       shutdownHook ;
+    private CommunityBootstrapper communityBootstrapper;
+    private Thread shutdownHook ;
 
     public void stop() {
-        if ( server != null )
-            server.stop();
+        if ( communityBootstrapper != null )
+            communityBootstrapper.stop();
     }
 
-    @Override
     public void updated(Dictionary dictionary) throws ConfigurationException {
         log.debug("updated : {}", new Object[]{(dictionary==null)?"null conf":dictionary.toString()});
         if (dictionary!=null) {
-            String configFilePath = (String) dictionary.get(NEO4J_CONFIG_FILE_PATH_PROPS);
+            String neo4jHome = (String) dictionary.get(NEO4J_HOME);
+            String configFilePath = neo4jHome + File.separator + dictionary.get(NEO4J_CONFIG_FILE_PATH_PROPS);
             log.debug("Neo4J server config file path: {}", new Object[]{configFilePath});
-            File configFile = new File(configFilePath);
-            log.debug("Create configuration from {}", configFilePath);
-            BufferingConsoleLogger console = new BufferingConsoleLogger();
-            configurator = new PropertyFileConfigurator(new Validator(new DatabaseLocationMustBeSpecifiedRule()), configFile, console);
-            Logging logging = DefaultLogging.createDefaultLogging(configurator.getDatabaseTuningProperties());
+
             log.debug("Create neo4j server");
-            server = new CommunityNeoServer(configurator, logging);
-            log.debug("Start neo4j server");
-            server.start();
+            if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new RMISecurityManager());
+            }
+            communityBootstrapper = new CommunityBootstrapper();
+            communityBootstrapper.start(new File(configFilePath), (Pair<String, String>[]) new ArrayList().toArray(new Pair[0]));
 
             shutdownHook = new Thread() {
                 @Override
                 public void run() {
                     log.info("Neo4j Server shutdown initiated by request");
-                    if (server != null)
-                        server.stop();
+                    if (communityBootstrapper != null)
+                        communityBootstrapper.stop();
                 }
             };
             Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-            Graph ccgraph = new Neo4j2Graph(server.getDatabase().getGraph());
+            Graph ccgraph = new Neo4j2Graph(communityBootstrapper.getServer().getDatabase().getGraph());
 
             Vertex echinopsii = ccgraph.addVertex(null);
             echinopsii.setProperty("name", "echinopsii");

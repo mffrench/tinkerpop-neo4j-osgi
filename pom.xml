@@ -6,7 +6,7 @@
 
     <groupId>net.echinopsii.demo</groupId>
     <artifactId>tinkerpop-neo4j-osgi</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <packaging>bundle</packaging>
 
     <repositories>
@@ -50,25 +50,25 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-kernel</artifactId>
-            <version>2.1.2</version>
+            <version>2.3.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.app</groupId>
             <artifactId>neo4j-server</artifactId>
-            <version>2.1.2</version>
+            <version>2.3.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
-            <artifactId>net.echinopsii.3rdparty.com.tinkerpop.blueprints.blueprints-core</artifactId>
-            <version>2.5.1</version>
+            <artifactId>blueprints-core</artifactId>
+            <version>2.6.231</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
-            <artifactId>net.echinopsii.3rdparty.com.tinkerpop.blueprints.blueprints-neo4j2-graph</artifactId>
-            <version>2.5.1</version>
+            <artifactId>blueprints-neo4j2-graph</artifactId>
+            <version>2.6.231</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -16,7 +16,6 @@ public class TinkerpopNeo4JActivator implements BundleActivator {
     private ServiceRegistration tinkerpopNeo4jServiceRegistration;
     private TinkerpopNeo4JManagedService tinkerpopNeo4jManagedService = new TinkerpopNeo4JManagedService();
 
-    @Override
     public void start(BundleContext bundleContext) throws Exception {
         Dictionary props = new Hashtable();
         log.debug("Starting net.echinopsii.demo.TinkerpopNeo4JManagedService");
@@ -24,7 +23,6 @@ public class TinkerpopNeo4JActivator implements BundleActivator {
         tinkerpopNeo4jServiceRegistration = bundleContext.registerService(ManagedService.class.getName(), tinkerpopNeo4jManagedService, props);
     }
 
-    @Override
     public void stop(BundleContext bundleContext) throws Exception {
         if (tinkerpopNeo4jServiceRegistration !=null) {
             tinkerpopNeo4jManagedService.stop();
