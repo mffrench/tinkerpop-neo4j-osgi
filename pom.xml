@@ -25,7 +25,7 @@
     </repositories>
 
     <properties>
-        <version.osgi.org.neo4j>2.1.2</version.osgi.org.neo4j>
+        <version.osgi.org.neo4j>2.3.1</version.osgi.org.neo4j>
     </properties>
 
     <dependencies>
@@ -60,14 +60,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.tinkerpop.blueprints</groupId>
-            <artifactId>blueprints-core</artifactId>
+            <groupId>com.tinkerpop</groupId>
+            <artifactId>net.echinopsii.3rdparty.com.tinkerpop.blueprints.blueprints-core</artifactId>
             <version>2.6.231</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.tinkerpop.blueprints</groupId>
-            <artifactId>blueprints-neo4j2-graph</artifactId>
+            <groupId>com.tinkerpop</groupId>
+            <artifactId>net.echinopsii.3rdparty.com.tinkerpop.blueprints.blueprints-neo4j2-graph</artifactId>
             <version>2.6.231</version>
             <scope>provided</scope>
         </dependency>
@@ -83,21 +83,11 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>net.echinopsii.demo.tinkerpop-neo4j-osgi</Bundle-SymbolicName>
-                        <Bundle-Version>1.0.0</Bundle-Version>
+                        <Bundle-Version>2.0.0</Bundle-Version>
                         <Bundle-Activator>net.echinopsii.demo.TinkerpopNeo4JActivator</Bundle-Activator>
                         <Import-Package>
-                            org.neo4j.graphdb;version="${version.osgi.org.neo4j}",
-                            org.neo4j.graphdb.factory;version="${version.osgi.org.neo4j}",
-                            org.neo4j.kernel;version="${version.osgi.org.neo4j}",
-                            org.neo4j.kernel.logging;version="${version.osgi.org.neo4j}",
+                            org.neo4j.helpers;version="${version.osgi.org.neo4j}",
                             org.neo4j.server;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.configuration;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.configuration.validation;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.database;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.webadmin.rest;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.rest.web;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.rest.discovery;version="${version.osgi.org.neo4j}",
-                            org.neo4j.server.webadmin.rest.console;version="${version.osgi.org.neo4j}",
                             org.eclipse.jetty.servlet.listener,
                             *
                         </Import-Package>
