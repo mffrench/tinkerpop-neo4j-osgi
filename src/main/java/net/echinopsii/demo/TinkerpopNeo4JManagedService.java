@@ -35,6 +35,8 @@ public class TinkerpopNeo4JManagedService implements ManagedService {
         if (dictionary!=null) {
             String neo4jHome = (String) dictionary.get(NEO4J_HOME);
             String configFilePath = neo4jHome + File.separator + dictionary.get(NEO4J_CONFIG_FILE_PATH_PROPS);
+            configFilePath = configFilePath.replace(" ", "");
+            System.setProperty("org.neo4j.server.properties", configFilePath);
             log.debug("Neo4J server config file path: {}", new Object[]{configFilePath});
 
             log.debug("Create neo4j server");
